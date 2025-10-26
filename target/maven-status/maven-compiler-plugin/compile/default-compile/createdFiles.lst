@@ -1,0 +1,10 @@
+com/vetcare/models/Owner.class
+com/vetcare/models/Pet.class
+com/vetcare/VetcareApplication.class
+com/vetcare/models/Visit.class
+com/vetcare/models/Visit$VisitStatus.class
+com/vetcare/models/Specialty.class
+com/vetcare/models/Clinic.class
+com/vetcare/models/Veterinarian.class
+com/vetcare/models/PetType.class
+com/vetcare/models/Pet$Gender.class
