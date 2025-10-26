@@ -13,7 +13,7 @@ public interface SpecialtyRepository extends JpaRepository<Specialty, Long>{
 
     List<Specialty> findByActiveTrue();
 
-    Optional<Specialty> fyByName(String name);
+    Optional<Specialty> findByName(String name);
 
     boolean existsByName(String name);
 

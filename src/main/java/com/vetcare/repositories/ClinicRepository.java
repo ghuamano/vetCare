@@ -14,7 +14,7 @@ public interface ClinicRepository extends JpaRepository<Clinic, Long>{
 
     List<Clinic> findByActiveTrue();
 
-    List<Clinic> FindByCity(String city);
+    List<Clinic> findByCity(String city);
 
     List<Clinic> findByNameContainingIgnoreCase(String name);
 
