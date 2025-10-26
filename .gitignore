@@ -1,0 +1,55 @@
+# === Java / Spring Boot ===
+target/
+*.class
+*.jar
+*.war
+*.ear
+
+# === Maven ===
+.mvn/
+!/.mvn/wrapper/maven-wrapper.jar
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+
+# === Logs & Temp ===
+*.log
+*.tmp
+*.swp
+*.swo
+hs_err_pid*
+replay_pid*
+
+# === IDEs ===
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+# VS Code
+.vscode/
+.history/
+# Eclipse
+.project
+.classpath
+.settings/
+
+# === OS files ===
+.DS_Store
+Thumbs.db
+
+# === Docker ===
+/mysql_data/
+*.env
+docker-compose.override.yml
+**/docker-compose*.yml
+
+# === Tests ===
+test-output/
+surefire-reports/
+
+# === Misc ===
+/bin/
+/logs/
+/build/
