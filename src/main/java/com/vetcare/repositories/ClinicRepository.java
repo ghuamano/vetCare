@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.vetcare.models.Clinic;
 
 @Repository
-public interface ClinicRepository extends JpaRepository<Clinic, Long>{
+public interface ClinicRepository extends JpaRepository<Clinic, Long> {
 
     List<Clinic> findByActiveTrue();
 
@@ -18,8 +18,11 @@ public interface ClinicRepository extends JpaRepository<Clinic, Long>{
 
     List<Clinic> findByNameContainingIgnoreCase(String name);
 
+    boolean existsByEmailAndIdNot(String email, Long id);
+
+    boolean existsByPhoneAndIdNot(String phone, Long id);
+
     @Query("SELECT c FROM Clinic c LEFT JOIN FETCH c.veterinarians WHERE c.id = :id")
     Optional<Clinic> findByIdWithVeterinarians(Long id);
 
 }
-

@@ -54,6 +54,18 @@ public class ClinicService {
         log.info("Updating clinic with id: {}", id);
         
         Clinic existingClinic = findById(id);
+
+        // Validate email uniqueness
+    if (!existingClinic.getEmail().equals(updatedClinic.getEmail()) &&
+        clinicRepository.existsByEmailAndIdNot(updatedClinic.getEmail(), id)) {
+        throw new DuplicateResourceException("Email already exists: " + updatedClinic.getEmail());
+    }
+    
+    // Validate phone uniqueness
+    if (!existingClinic.getPhone().equals(updatedClinic.getPhone()) &&
+        clinicRepository.existsByPhoneAndIdNot(updatedClinic.getPhone(), id)) {
+        throw new DuplicateResourceException("Phone number already exists: " + updatedClinic.getPhone());
+    }
         
         existingClinic.setName(updatedClinic.getName());
         existingClinic.setAddress(updatedClinic.getAddress());
