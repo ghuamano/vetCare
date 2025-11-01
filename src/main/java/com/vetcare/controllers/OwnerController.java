@@ -52,5 +52,17 @@ public class OwnerController {
     public ResponseEntity<Owner> updateOwner(@PathVariable Long id, @Valid @RequestBody Owner owner){
         return ResponseEntity.ok(ownerService.update(id, owner));
     }
+    
+        @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteOwner(@PathVariable Long id) {
+        ownerService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+    
+    @PatchMapping("/{id}/deactivate")
+    public ResponseEntity<Void> deactivateOwner(@PathVariable Long id) {
+        ownerService.deactivate(id);
+        return ResponseEntity.noContent().build();
+    }
 
 }
