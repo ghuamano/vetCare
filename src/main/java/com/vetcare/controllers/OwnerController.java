@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import com.vetcare.models.Owner;
 import com.vetcare.services.OwnerService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -46,4 +47,11 @@ public class OwnerController {
 
         return new ResponseEntity<>(createdOwner, HttpStatus.CREATED);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Owner> updateOwner(@PathVariable Long id, @Valid @RequestBody Owner owner){
+        return ResponseEntity.ok(ownerService.update(id, owner));
+    }
+
+    
 }
