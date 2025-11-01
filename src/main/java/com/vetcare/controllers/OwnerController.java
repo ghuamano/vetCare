@@ -53,5 +53,4 @@ public class OwnerController {
         return ResponseEntity.ok(ownerService.update(id, owner));
     }
 
-    
 }
