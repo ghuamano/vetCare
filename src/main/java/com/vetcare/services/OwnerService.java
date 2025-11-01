@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.vetcare.models.Owner;
-import com.vetcare.models.Pet;
 import com.vetcare.repositories.OwnerRepository;
 
 import lombok.RequiredArgsConstructor;

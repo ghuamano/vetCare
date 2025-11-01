@@ -6,8 +6,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.vetcare.exceptions.ResourceNotFoundException;
 import com.vetcare.models.Clinic;
-import com.vetcare.models.Owner;
 import com.vetcare.models.Pet;
 import com.vetcare.models.Veterinarian;
 import com.vetcare.models.Visit;
