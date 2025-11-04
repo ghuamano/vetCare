@@ -8,9 +8,9 @@
 
   <groupId>com.vetcare</groupId>
   <artifactId>vetcare</artifactId>
-  <version>1.0.0</version>
+  <version>0.0.1-SNAPSHOT</version>
   <name>VetCare</name>
-  <description>Veterinary Management Application</description>
+  <description>Veterinary Clinic Management System</description>
 
 
   <url>http://www.example.com</url>
@@ -72,6 +72,13 @@
       <optional>true</optional>
     </dependency>
 
+    <!-- Springdoc OpenAPI (Swagger) -->
+    <dependency>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+      <version>2.3.0</version>
+    </dependency>
+
     <!-- 🧪 Testing -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -81,9 +88,9 @@
 
     <!-- SpringDoc OpenAPI (Swagger UI) -->
     <dependency>
-        <groupId>org.springdoc</groupId>
-        <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-        <version>2.6.0</version>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+      <version>2.6.0</version>
     </dependency>
 
   </dependencies>
@@ -93,6 +100,14 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <excludes>
+            <exclude>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+            </exclude>
+          </excludes>
+        </configuration>
       </plugin>
     </plugins>
   </build>
