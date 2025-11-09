@@ -22,6 +22,12 @@ services:
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: vetcare-phpmyadmin
+    # On Apple Silicon (arm64) Docker may pull an amd64 image which triggers
+    # the platform mismatch warning and requires emulation. Setting platform
+    # forces the image architecture; this may be slower because it uses qemu.
+    # Alternatively you can replace phpMyAdmin with an ARM-native admin UI
+    # such as `adminer` if you prefer native performance.
+    platform: linux/amd64
     restart: always
     ports:
       - "8081:80"

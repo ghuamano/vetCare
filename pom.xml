@@ -72,11 +72,11 @@
       <optional>true</optional>
     </dependency>
 
-    <!-- Springdoc OpenAPI (Swagger) -->
+    <!-- Springdoc OpenAPI (Swagger) - single, compatible version -->
     <dependency>
       <groupId>org.springdoc</groupId>
       <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-      <version>2.3.0</version>
+      <version>2.1.0</version>
     </dependency>
 
     <!-- 🧪 Testing -->
@@ -86,12 +86,7 @@
       <scope>test</scope>
     </dependency>
 
-    <!-- SpringDoc OpenAPI (Swagger UI) -->
-    <dependency>
-      <groupId>org.springdoc</groupId>
-      <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-      <version>2.6.0</version>
-    </dependency>
+    <!-- (removed duplicate springdoc dependency) -->
 
   </dependencies>
 

@@ -1,4 +1,8 @@
 spring:
+
+  application:
+    name: ${SPRING_APPLICATION_NAME:vetcare}
+
   datasource:
     url: ${SPRING_DATASOURCE_URL:jdbc:mysql://mysql:3306/vetcare_db}
     username: ${SPRING_DATASOURCE_USERNAME:vetcare_user}
@@ -12,6 +16,13 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
+
+  jackson:
+    time-zone: Europe/Rome
+    serialization:
+      indent-output: true
+      write-dates-as-timestamps: false
+
 
 server:
   port: ${SERVER_PORT:8080}
