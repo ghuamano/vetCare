@@ -1,18 +1,19 @@
 package com.vetcare.services;
 
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.vetcare.exceptions.DuplicateResourceException;
+import com.vetcare.dto.*;
 import com.vetcare.exceptions.ResourceNotFoundException;
-import com.vetcare.models.Specialty;
+import com.vetcare.exceptions.DuplicateResourceException;
 import com.vetcare.models.Veterinarian;
+import com.vetcare.models.Specialty;
+import com.vetcare.models.Clinic;
 import com.vetcare.repositories.VeterinarianRepository;
-
+import com.vetcare.repositories.ClinicRepository;
+import com.vetcare.mappers.VeterinarianMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -20,110 +21,121 @@ import lombok.extern.slf4j.Slf4j;
 public class VeterinarianService {
 
     private final VeterinarianRepository veterinarianRepository;
+    private final ClinicRepository clinicRepository;
     private final SpecialtyService specialtyService;
-
+    private final VeterinarianMapper veterinarianMapper;
+    
     @Transactional(readOnly = true)
-    public List<Veterinarian> findAll() {
+    public List<VeterinarianDTO> findAll() {
         log.debug("Finding all veterinarians");
-        return veterinarianRepository.findAll();
+        List<Veterinarian> veterinarians = veterinarianRepository.findAll();
+        return veterinarianMapper.toDTOList(veterinarians);
     }
-
+    
     @Transactional(readOnly = true)
-    public List<Veterinarian> findAllActive() {
+    public List<VeterinarianDTO> findAllActive() {
         log.debug("Finding all active veterinarians");
-        return veterinarianRepository.findByActiveTrue();
+        List<Veterinarian> veterinarians = veterinarianRepository.findByActiveTrue();
+        return veterinarianMapper.toDTOList(veterinarians);
     }
-
+    
     @Transactional(readOnly = true)
-    public Veterinarian findById(Long id) {
+    public VeterinarianDTO findById(Long id) {
         log.debug("Finding veterinarian by id: {}", id);
-        return veterinarianRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Veterinarian not found with id: " + id));
+        Veterinarian veterinarian = veterinarianRepository.findByIdWithSpecialties(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Veterinarian not found with id: " + id));
+        return veterinarianMapper.toDTO(veterinarian);
     }
-
+    
     @Transactional(readOnly = true)
-    public Veterinarian findByIdWithSpecialties(Long id) {
-        log.debug("Finding veterinarian with specialties by id: {}", id);
-        return veterinarianRepository.findByIdWithSpecialties(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Veterinarian not found with id: " + id));
-    }
-
-    @Transactional(readOnly = true)
-    public List<Veterinarian> findBySpecialty(Long specialtyId) {
+    public List<VeterinarianDTO> findBySpecialty(Long specialtyId) {
         log.debug("Finding veterinarians by specialty id: {}", specialtyId);
-        return veterinarianRepository.findBySpecialtyId(specialtyId);
+        List<Veterinarian> veterinarians = veterinarianRepository.findBySpecialtyId(specialtyId);
+        return veterinarianMapper.toDTOList(veterinarians);
     }
-
+    
     @Transactional
-    public Veterinarian create(Veterinarian veterinarian) {
-        log.info("Creating new veterinarian: {} {}", veterinarian.getFirstName(), veterinarian.getLastName());
-
-        if (veterinarianRepository.findByEmail(veterinarian.getEmail()).isPresent()) {
-            throw new DuplicateResourceException("Email already exists: " + veterinarian.getEmail());
+    public VeterinarianDTO create(CreateVeterinarianDTO createVeterinarianDTO) {
+        log.info("Creating new veterinarian: {} {}", createVeterinarianDTO.getFirstName(), createVeterinarianDTO.getLastName());
+        
+        if (veterinarianRepository.findByEmail(createVeterinarianDTO.getEmail()).isPresent()) {
+            throw new DuplicateResourceException("Email already exists: " + createVeterinarianDTO.getEmail());
         }
-
-        if (veterinarianRepository.findByLicenseNumber(veterinarian.getLicenseNumber()).isPresent()) {
-            throw new DuplicateResourceException("License number already exists: " + veterinarian.getLicenseNumber());
+        
+        if (veterinarianRepository.findByLicenseNumber(createVeterinarianDTO.getLicenseNumber()).isPresent()) {
+            throw new DuplicateResourceException("License number already exists: " + createVeterinarianDTO.getLicenseNumber());
         }
-
-        return veterinarianRepository.save(veterinarian);
+        
+        Veterinarian veterinarian = veterinarianMapper.toEntity(createVeterinarianDTO);
+        
+        if (createVeterinarianDTO.getClinicId() != null) {
+            Clinic clinic = clinicRepository.findById(createVeterinarianDTO.getClinicId())
+                .orElseThrow(() -> new ResourceNotFoundException("Clinic not found with id: " + createVeterinarianDTO.getClinicId()));
+            veterinarian.setClinic(clinic);
+        }
+        
+        Veterinarian savedVeterinarian = veterinarianRepository.save(veterinarian);
+        return veterinarianMapper.toDTO(savedVeterinarian);
     }
-
+    
     @Transactional
-    public Veterinarian addSpecialty(Long veterinarianId, Long specialtyId) {
+    public VeterinarianDTO addSpecialty(Long veterinarianId, Long specialtyId) {
         log.info("Adding specialty {} to veterinarian {}", specialtyId, veterinarianId);
-
-        Veterinarian veterinarian = findByIdWithSpecialties(veterinarianId);
-        Specialty specialty = specialtyService.findById(specialtyId);
-
+        
+        Veterinarian veterinarian = veterinarianRepository.findByIdWithSpecialties(veterinarianId)
+            .orElseThrow(() -> new ResourceNotFoundException("Veterinarian not found with id: " + veterinarianId));
+        
+        Specialty specialty = specialtyService.findEntityById(specialtyId);
         veterinarian.getSpecialties().add(specialty);
-
-        return veterinarianRepository.save(veterinarian);
+        
+        Veterinarian savedVeterinarian = veterinarianRepository.save(veterinarian);
+        return veterinarianMapper.toDTO(savedVeterinarian);
     }
-
+    
     @Transactional
-    public Veterinarian removeSpecialty(Long veterinarianId, Long specialtyId) {
+    public VeterinarianDTO removeSpecialty(Long veterinarianId, Long specialtyId) {
         log.info("Removing specialty {} from veterinarian {}", specialtyId, veterinarianId);
-
-        Veterinarian veterinarian = findByIdWithSpecialties(veterinarianId);
+        
+        Veterinarian veterinarian = veterinarianRepository.findByIdWithSpecialties(veterinarianId)
+            .orElseThrow(() -> new ResourceNotFoundException("Veterinarian not found with id: " + veterinarianId));
+        
         veterinarian.getSpecialties().removeIf(s -> s.getId().equals(specialtyId));
-
-        return veterinarianRepository.save(veterinarian);
+        
+        Veterinarian savedVeterinarian = veterinarianRepository.save(veterinarian);
+        return veterinarianMapper.toDTO(savedVeterinarian);
     }
-
+    
     @Transactional
-    public Veterinarian update(Long id, Veterinarian updatedVeterinarian) {
+    public VeterinarianDTO update(Long id, UpdateVeterinarianDTO updateVeterinarianDTO) {
         log.info("Updating veterinarian with id: {}", id);
-
-        Veterinarian existingVet = findById(id);
-
-        if (!existingVet.getEmail().equals(updatedVeterinarian.getEmail()) &&
-                veterinarianRepository.findByEmail(updatedVeterinarian.getEmail()).isPresent()) {
-            throw new DuplicateResourceException("Email already exists: " + updatedVeterinarian.getEmail());
+        
+        Veterinarian existingVet = veterinarianRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Veterinarian not found with id: " + id));
+        
+        if (!existingVet.getEmail().equals(updateVeterinarianDTO.getEmail()) &&
+            veterinarianRepository.findByEmail(updateVeterinarianDTO.getEmail()).isPresent()) {
+            throw new DuplicateResourceException("Email already exists: " + updateVeterinarianDTO.getEmail());
         }
-
-        existingVet.setFirstName(updatedVeterinarian.getFirstName());
-        existingVet.setLastName(updatedVeterinarian.getLastName());
-        existingVet.setEmail(updatedVeterinarian.getEmail());
-        existingVet.setPhone(updatedVeterinarian.getPhone());
-        existingVet.setPhotoUrl(updatedVeterinarian.getPhotoUrl());
-
-        return veterinarianRepository.save(existingVet);
+        
+        veterinarianMapper.updateEntityFromDTO(updateVeterinarianDTO, existingVet);
+        Veterinarian savedVeterinarian = veterinarianRepository.save(existingVet);
+        return veterinarianMapper.toDTO(savedVeterinarian);
     }
-
+    
     @Transactional
     public void delete(Long id) {
         log.info("Deleting veterinarian with id: {}", id);
-        Veterinarian veterinarian = findById(id);
+        Veterinarian veterinarian = veterinarianRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Veterinarian not found with id: " + id));
         veterinarianRepository.delete(veterinarian);
     }
-
+    
     @Transactional
     public void deactivate(Long id) {
         log.info("Deactivating veterinarian with id: {}", id);
-        Veterinarian veterinarian = findById(id);
+        Veterinarian veterinarian = veterinarianRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Veterinarian not found with id: " + id));
         veterinarian.setActive(false);
         veterinarianRepository.save(veterinarian);
     }
-
 }

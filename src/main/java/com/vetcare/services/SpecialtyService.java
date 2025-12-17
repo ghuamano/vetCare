@@ -1,17 +1,16 @@
 package com.vetcare.services;
 
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.vetcare.exceptions.DuplicateResourceException;
+import com.vetcare.dto.SpecialtyDTO;
 import com.vetcare.exceptions.ResourceNotFoundException;
+import com.vetcare.exceptions.DuplicateResourceException;
 import com.vetcare.models.Specialty;
 import com.vetcare.repositories.SpecialtyRepository;
-
+import com.vetcare.mappers.SpecialtyMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -19,59 +18,71 @@ import lombok.extern.slf4j.Slf4j;
 public class SpecialtyService {
 
     private final SpecialtyRepository specialtyRepository;
-
+    private final SpecialtyMapper specialtyMapper;
+    
     @Transactional(readOnly = true)
-    public List<Specialty> findAll() {
+    public List<SpecialtyDTO> findAll() {
         log.debug("Finding all specialties");
-        return specialtyRepository.findAll();
+        List<Specialty> specialties = specialtyRepository.findAll();
+        return specialtyMapper.toDTOList(specialties);
     }
     
     @Transactional(readOnly = true)
-    public List<Specialty> findAllActive() {
+    public List<SpecialtyDTO> findAllActive() {
         log.debug("Finding all active specialties");
-        return specialtyRepository.findByActiveTrue();
+        List<Specialty> specialties = specialtyRepository.findByActiveTrue();
+        return specialtyMapper.toDTOList(specialties);
     }
     
     @Transactional(readOnly = true)
-    public Specialty findById(Long id) {
+    public SpecialtyDTO findById(Long id) {
         log.debug("Finding specialty by id: {}", id);
+        Specialty specialty = specialtyRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Specialty not found with id: " + id));
+        return specialtyMapper.toDTO(specialty);
+    }
+    
+    @Transactional(readOnly = true)
+    public Specialty findEntityById(Long id) {
         return specialtyRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Specialty not found with id: " + id));
     }
     
     @Transactional
-    public Specialty create(Specialty specialty) {
-        log.info("Creating new specialty: {}", specialty.getName());
+    public SpecialtyDTO create(SpecialtyDTO specialtyDTO) {
+        log.info("Creating new specialty: {}", specialtyDTO.getName());
         
-        if (specialtyRepository.existsByName(specialty.getName())) {
-            throw new DuplicateResourceException("Specialty already exists: " + specialty.getName());
+        if (specialtyRepository.existsByName(specialtyDTO.getName())) {
+            throw new DuplicateResourceException("Specialty already exists: " + specialtyDTO.getName());
         }
         
-        return specialtyRepository.save(specialty);
+        Specialty specialty = specialtyMapper.toEntity(specialtyDTO);
+        Specialty savedSpecialty = specialtyRepository.save(specialty);
+        return specialtyMapper.toDTO(savedSpecialty);
     }
     
     @Transactional
-    public Specialty update(Long id, Specialty updatedSpecialty) {
+    public SpecialtyDTO update(Long id, SpecialtyDTO specialtyDTO) {
         log.info("Updating specialty with id: {}", id);
         
-        Specialty existingSpecialty = findById(id);
+        Specialty existingSpecialty = specialtyRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Specialty not found with id: " + id));
         
-        if (!existingSpecialty.getName().equals(updatedSpecialty.getName()) &&
-            specialtyRepository.existsByName(updatedSpecialty.getName())) {
-            throw new DuplicateResourceException("Specialty already exists: " + updatedSpecialty.getName());
+        if (!existingSpecialty.getName().equals(specialtyDTO.getName()) &&
+            specialtyRepository.existsByName(specialtyDTO.getName())) {
+            throw new DuplicateResourceException("Specialty already exists: " + specialtyDTO.getName());
         }
         
-        existingSpecialty.setName(updatedSpecialty.getName());
-        existingSpecialty.setDescription(updatedSpecialty.getDescription());
-        
-        return specialtyRepository.save(existingSpecialty);
+        specialtyMapper.updateEntityFromDTO(specialtyDTO, existingSpecialty);
+        Specialty savedSpecialty = specialtyRepository.save(existingSpecialty);
+        return specialtyMapper.toDTO(savedSpecialty);
     }
     
     @Transactional
     public void delete(Long id) {
         log.info("Deleting specialty with id: {}", id);
-        Specialty specialty = findById(id);
+        Specialty specialty = specialtyRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Specialty not found with id: " + id));
         specialtyRepository.delete(specialty);
     }
-
 }
