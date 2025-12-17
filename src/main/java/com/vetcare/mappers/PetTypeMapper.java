@@ -7,7 +7,7 @@ import org.mapstruct.*;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
-public class PetTypeMapper {
+public interface PetTypeMapper {
 
     // Entity to DTO
     PetTypeDTO toDTO(PetType petType);

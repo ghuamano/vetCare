@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 @Mapper(componentModel = "spring")
-public class SpecialtyMapper {
+public interface SpecialtyMapper {
 
     // Entity to DTO
     SpecialtyDTO toDTO(Specialty specialty);

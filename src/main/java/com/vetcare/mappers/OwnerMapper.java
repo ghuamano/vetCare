@@ -8,7 +8,7 @@ import org.mapstruct.*;
 import java.util.List;
 
 @Mapper(componentModel = "spring", uses = {PetMapper.class})
-public class OwnerMapper {
+public interface OwnerMapper {
 
      // Entity to DTO
     OwnerDTO toDTO(Owner owner);

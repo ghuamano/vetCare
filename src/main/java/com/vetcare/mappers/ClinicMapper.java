@@ -9,7 +9,7 @@ import org.mapstruct.*;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
-public class ClinicMapper {
+public interface ClinicMapper {
 
     // Entity to DTO
     ClinicDTO toDTO(Clinic clinic);

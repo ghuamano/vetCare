@@ -7,7 +7,7 @@ import org.mapstruct.*;
 import java.util.List;
 
 @Mapper(componentModel = "spring", uses = {ClinicMapper.class, SpecialtyMapper.class})
-public class VeterinarianMapper {
+public interface VeterinarianMapper {
 
     // Entity to DTO
     @Mapping(target = "clinic", source = "clinic")

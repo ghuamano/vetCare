@@ -8,7 +8,7 @@ import java.util.List;
 
 @Mapper(componentModel = "spring", uses = {PetMapper.class, VeterinarianMapper.class, ClinicMapper.class})
 
-public class VisitMapper {
+public interface VisitMapper {
 
     // Entity to DTO
     @Mapping(target = "pet", source = "pet")

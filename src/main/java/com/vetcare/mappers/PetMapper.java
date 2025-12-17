@@ -7,7 +7,7 @@ import org.mapstruct.*;
 import java.util.List;
 
 @Mapper(componentModel = "spring", uses = {OwnerMapper.class, PetTypeMapper.class, ClinicMapper.class})
-public class PetMapper {
+public interface PetMapper {
 
     // Entity to DTO
     @Mapping(target = "owner", source = "owner")
