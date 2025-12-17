@@ -20,18 +20,18 @@ public class OwnerDTO {
     @Schema(description = "Unique identifier", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
     private Long id;
     
-    @Schema(description = "Owner's first name", example = "John", required = true)
+    @Schema(description = "Owner's first name", example = "John")
     @NotBlank(message = "First name is required")
     private String firstName;
     
-    @Schema(description = "Owner's last name", example = "Doe", required = true)
+    @Schema(description = "Owner's last name", example = "Doe")
     @NotBlank(message = "Last name is required")
     private String lastName;
     
     @Schema(description = "Document number (ID)", example = "123456789")
     private String documentNumber;
     
-    @Schema(description = "Email address", example = "john.doe@email.com", required = true)
+    @Schema(description = "Email address", example = "john.doe@email.com")
     @NotBlank(message = "Email is required")
     @Email(message = "Email should be valid")
     private String email;
