@@ -17,7 +17,7 @@ public class PetTypeDTO {
     @Schema(description = "Unique identifier", example = "1")
     private Long id;
     
-    @Schema(description = "Pet type name", example = "Dog", required = true)
+    @Schema(description = "Pet type name", example = "Dog")
     @NotBlank(message = "Pet type name is required")
     private String name;
     

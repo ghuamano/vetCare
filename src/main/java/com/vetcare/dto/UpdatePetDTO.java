@@ -18,11 +18,11 @@ import java.time.LocalDate;
 @Schema(description = "Request body for updating a pet")
 public class UpdatePetDTO {
 
-    @Schema(description = "Pet's name", example = "Max", required = true)
+    @Schema(description = "Pet's name", example = "Max")
     @NotBlank(message = "Pet name is required")
     private String name;
     
-    @Schema(description = "Birth date", example = "2020-05-15", required = true)
+    @Schema(description = "Birth date", example = "2020-05-15")
     @NotNull(message = "Birth date is required")
     private LocalDate birthDate;
     

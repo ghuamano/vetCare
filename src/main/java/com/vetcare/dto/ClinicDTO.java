@@ -9,7 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+
 
 
 @Data
@@ -22,11 +22,11 @@ public class ClinicDTO {
     @Schema(description = "Unique identifier", example = "1")
     private Long id;
     
-    @Schema(description = "Clinic name", example = "VetCare Centro", required = true)
+    @Schema(description = "Clinic name", example = "VetCare Centro")
     @NotBlank(message = "Clinic name is required")
     private String name;
     
-    @Schema(description = "Address", example = "123 Main St", required = true)
+    @Schema(description = "Address", example = "123 Main St")
     @NotBlank(message = "Address is required")
     private String address;
     

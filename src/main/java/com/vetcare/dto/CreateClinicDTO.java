@@ -14,15 +14,15 @@ import lombok.NoArgsConstructor;
 @Schema(description = "Request body for creating a new clinic")
 public class CreateClinicDTO {
 
-    @Schema(description = "Clinic name", example = "VetCare Centro", required = true)
+    @Schema(description = "Clinic name", example = "VetCare Centro")
     @NotBlank(message = "Clinic name is required")
     private String name;
     
-    @Schema(description = "Address", example = "123 Main St", required = true)
+    @Schema(description = "Address", example = "123 Main St")
     @NotBlank(message = "Address is required")
     private String address;
     
-    @Schema(description = "City", example = "Bogotá", required = true)
+    @Schema(description = "City", example = "Bogotá")
     @NotBlank(message = "City is required")
     private String city;
     

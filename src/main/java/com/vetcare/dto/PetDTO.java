@@ -22,11 +22,11 @@ public class PetDTO {
     @Schema(description = "Unique identifier", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
     private Long id;
     
-    @Schema(description = "Pet's name", example = "Max", required = true)
+    @Schema(description = "Pet's name", example = "Max")
     @NotBlank(message = "Pet name is required")
     private String name;
     
-    @Schema(description = "Birth date", example = "2020-05-15", required = true)
+    @Schema(description = "Birth date", example = "2020-05-15")
     @NotNull(message = "Birth date is required")
     private LocalDate birthDate;
     

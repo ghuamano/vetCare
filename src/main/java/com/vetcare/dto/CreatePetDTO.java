@@ -18,11 +18,11 @@ import java.time.LocalDate;
 @Schema(description = "Request body for creating a new pet")
 public class CreatePetDTO {
 
-    @Schema(description = "Pet's name", example = "Max", required = true)
+    @Schema(description = "Pet's name", example = "Max")
     @NotBlank(message = "Pet name is required")
     private String name;
     
-    @Schema(description = "Birth date", example = "2020-05-15", required = true)
+    @Schema(description = "Birth date", example = "2020-05-15")
     @NotNull(message = "Birth date is required")
     private LocalDate birthDate;
     
@@ -44,11 +44,11 @@ public class CreatePetDTO {
     @Schema(description = "Photo URL")
     private String photoUrl;
     
-    @Schema(description = "Owner ID", example = "1", required = true)
+    @Schema(description = "Owner ID", example = "1")
     @NotNull(message = "Owner ID is required")
     private Long ownerId;
     
-    @Schema(description = "Pet type ID", example = "1", required = true)
+    @Schema(description = "Pet type ID", example = "1")
     @NotNull(message = "Pet type ID is required")
     private Long petTypeId;
     
